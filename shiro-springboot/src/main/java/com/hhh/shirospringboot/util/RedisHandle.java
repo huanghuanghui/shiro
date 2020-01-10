@@ -29,14 +29,14 @@ import java.util.function.Consumer;
 @Component
 public class RedisHandle {
 
-  public static RedisTemplate redisTemplate;
+  private static RedisTemplate redisTemplate;
 
   @Autowired
   public void setRedisTemplate(RedisTemplate redisTemplate) {
     RedisHandle.redisTemplate = redisTemplate;
   }
 
-  public static Integer REDIS_INCREASE = 1;
+  private static Integer REDIS_INCREASE = 1;
   /**
    * 默认失效时间 一天
    */
