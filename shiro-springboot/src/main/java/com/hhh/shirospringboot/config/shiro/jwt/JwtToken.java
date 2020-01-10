@@ -1,0 +1,29 @@
+package com.hhh.shirospringboot.config.shiro.jwt;
+
+import org.apache.shiro.authc.AuthenticationToken;
+
+/**
+ * @author hhh
+ * @date 2020/1/10 9:10
+ * @Despriction JwtToken
+ */
+public class JwtToken implements AuthenticationToken {
+  /**
+   * Token
+   */
+  private String token;
+
+  public JwtToken(String token) {
+    this.token = token;
+  }
+
+  @Override
+  public Object getPrincipal() {
+    return token;
+  }
+
+  @Override
+  public Object getCredentials() {
+    return token;
+  }
+}
