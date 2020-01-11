@@ -1,13 +1,12 @@
 #### 项目介绍
 
 1. RESTful API
-2. Maven集成Mybatis Generator(逆向工程)
-3. Shiro + Java-JWT实现无状态鉴权机制(Token)
-4. 密码加密(采用AES-128 + Base64的方式)
-5. 集成Redis(Jedis)
-6. 重写Shiro缓存机制(Redis)
-7. Redis中保存RefreshToken信息(做到JWT的可控性)
-8. 根据RefreshToken自动刷新AccessToken
+2. Shiro + Java-JWT实现无状态鉴权机制(Token)
+3. 密码加密(采用AES-128 + Base64的方式)
+4. 集成Redis(lettuce)
+5. 重写Shiro缓存机制(Redis)
+6. Redis中保存RefreshToken信息(做到JWT的可控性)
+7. 根据RefreshToken自动刷新AccessToken
 
 ##### 关于Shiro + Java-JWT实现无状态鉴权机制(Token)
 
@@ -45,7 +44,7 @@
 1. SpringBoot + Mybatis核心框架
 2. PageHelper插件 + 通用Mapper插件
 3. Shiro + Java-JWT无状态鉴权认证机制
-4. Redis(letture)缓存框架
+4. Redis(lettuce)缓存框架
 5. 引入Log4j2日志框架，替代spring默认logging日志框架，可以自己修改默认的配置文件log4j2-spring.xml中的文件输出路径
 
 #### 登录方式
