@@ -47,3 +47,13 @@
 3. Shiro + Java-JWT无状态鉴权认证机制
 4. Redis(letture)缓存框架
 5. 引入Log4j2日志框架，替代spring默认logging日志框架，可以自己修改默认的配置文件log4j2-spring.xml中的文件输出路径
+
+#### 登录方式
+
+![image-20200111160010576](http://jn-hhh.oss-cn-hangzhou.aliyuncs.com/image-20200111160010576.png)
+
+#### 通过header中的Jwt验证用户信息
+
+header中添加 Authorization ：
+
+![image-20200111160016725](http://jn-hhh.oss-cn-hangzhou.aliyuncs.com/image-20200111160016725.png)
