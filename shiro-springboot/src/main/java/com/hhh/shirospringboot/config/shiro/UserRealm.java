@@ -10,7 +10,9 @@ import com.hhh.shirospringboot.model.UserDto;
 import com.hhh.shirospringboot.model.common.Constant;
 import com.hhh.shirospringboot.util.JwtUtil;
 import com.hhh.shirospringboot.util.RedisHandle;
+import com.hhh.shirospringboot.util.UserUtil;
 import com.hhh.shirospringboot.util.common.StringUtil;
+import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -30,6 +32,7 @@ import java.util.List;
  * @Despriction 自定义Realm
  */
 @Service
+@Log4j2
 public class UserRealm extends AuthorizingRealm {
 
   private final UserMapper userMapper;
@@ -93,6 +96,13 @@ public class UserRealm extends AuthorizingRealm {
     if (StringUtil.isBlank(account)) {
       throw new AuthenticationException("Token中帐号为空(The account in Token is empty.)");
     }
+    //校验token是否过期
+    verifyToken(token,account);
+    //当前的活跃用户中，包含当前用户，直接过验证，不情求数据库
+    if(UserUtil.contain(account)){
+      log.info("当前的活跃用户中，包含当前用户-{}，直接过验证，不情求数据库",account);
+      return new SimpleAuthenticationInfo(token, token, "userRealm");
+    }
     // 查询用户是否存在
     UserDto userDto = new UserDto();
     userDto.setAccount(account);
@@ -100,14 +110,25 @@ public class UserRealm extends AuthorizingRealm {
     if (userDto == null) {
       throw new AuthenticationException("该帐号不存在(The account does not exist.)");
     }
-    // 开始认证，要AccessToken认证通过，且Redis中存在RefreshToken，且两个Token时间戳一致
-    if (JwtUtil.verify(token) && RedisHandle.hasKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN + account)) {
-      // 获取RefreshToken的时间戳
-      String currentTimeMillisRedis = RedisHandle.get(Constant.PREFIX_SHIRO_REFRESH_TOKEN + account).toString();
-      // 获取AccessToken时间戳，与RefreshToken的时间戳对比
-      if (JwtUtil.getClaim(token, Constant.CURRENT_TIME_MILLIS).equals(currentTimeMillisRedis)) {
-        return new SimpleAuthenticationInfo(token, token, "userRealm");
-      }
+    // 获取RefreshToken的时间戳
+    String currentTimeMillisRedis = RedisHandle.get(Constant.PREFIX_SHIRO_REFRESH_TOKEN + account).toString();
+    // 获取AccessToken时间戳，与RefreshToken的时间戳对比
+    if (JwtUtil.getClaim(token, Constant.CURRENT_TIME_MILLIS).equals(currentTimeMillisRedis)) {
+      return new SimpleAuthenticationInfo(token, token, "userRealm");
+    }
+    throw new AuthenticationException("Token已过期(Token expired or incorrect.)");
+  }
+
+  /**
+   * 验证token是否过期
+   * @param token
+   * @param account
+   * @return
+   */
+  private Boolean verifyToken(String token,String account){
+    //开始认证，要AccessToken认证通过，且Redis中存在RefreshToken，且两个Token时间戳一致
+    if (JwtUtil.verify(token) && RedisHandle.hasKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN + account)){
+      return Boolean.TRUE;
     }
     throw new AuthenticationException("Token已过期(Token expired or incorrect.)");
   }

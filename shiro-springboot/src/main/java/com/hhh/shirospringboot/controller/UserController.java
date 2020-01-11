@@ -57,7 +57,7 @@ public class UserController {
   private IUserService userService;
 
   @Autowired
-  public UserController(UserUtil userUtil, IUserService userService,RedisHandle redisHandle) {
+  public UserController(UserUtil userUtil, IUserService userService) {
     this.userUtil = userUtil;
     this.userService = userService;
   }
@@ -226,7 +226,7 @@ public class UserController {
   /**
    * 更新用户
    */
-  @PutMapping
+  @PutMapping("/update")
   @RequiresPermissions(logical = Logical.AND, value = {"user:edit"})
   public ResponseBean update(@Validated(UserEditValidGroup.class) @RequestBody UserDto userDto) {
     // 查询数据库密码
@@ -247,6 +247,8 @@ public class UserController {
       String key = AesCipherUtil.enCrypto(userDto.getAccount() + userDto.getPassword());
       userDto.setPassword(key);
     }
+    //移除本用户的本地缓存
+    UserUtil.removeLru(userDto.getAccount());
     int count = userService.updateByPrimaryKeySelective(userDto);
     if (count <= 0) {
       throw new CustomException("更新失败(Update Failure)");
@@ -260,11 +262,12 @@ public class UserController {
   @DeleteMapping("/{id}")
   @RequiresPermissions(logical = Logical.AND, value = {"user:edit"})
   public ResponseBean delete(@PathVariable("id") Integer id) {
-    int count = userService.deleteByPrimaryKey(id);
-    if (count <= 0) {
+    UserDto userDto =userService.selectByPrimaryKey(id);
+    if (userDto==null){
       throw new CustomException("删除失败，ID不存在(Deletion Failed. ID does not exist.)");
     }
-    return new ResponseBean(HttpStatus.OK.value(), "删除成功(Delete Success)", null);
+    UserUtil.removeLru(userDto.getAccount());
+    return new ResponseBean(HttpStatus.OK.value(), "删除成功(Delete Success)", userService.deleteByPrimaryKey(id));
   }
 
   /**
