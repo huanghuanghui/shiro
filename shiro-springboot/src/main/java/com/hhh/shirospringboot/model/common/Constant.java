@@ -33,7 +33,7 @@ public class Constant {
   /**
    *Shiro缓存过期时间-5分钟-5*60(秒为单位)(一般设置与AccessToken过期时间一致)
    */
-  public static final String SHIOR_CACHE_EXPIRE_TIME= "300";
+  public static final Integer SHIOR_CACHE_EXPIRE_TIME= 300;
   /************************************************/
 
 

@@ -52,6 +52,7 @@ public class UserRealm extends AuthorizingRealm {
   }
 
   /**
+   * 获取授权信息
    * 只有当需要检测用户权限的时候才会调用此方法，例如checkRole,checkPermission之类的
    */
   @Override
@@ -80,6 +81,7 @@ public class UserRealm extends AuthorizingRealm {
   }
 
   /**
+   * 获取身份验证信息
    * 默认使用此方法进行用户名正确与否验证，错误抛出异常即可。
    */
   @Override

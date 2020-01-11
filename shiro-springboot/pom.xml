@@ -34,6 +34,14 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+      <!--spring-boot-starter-logging的包在spring-boot-starter中直接排除掉，从spring boot整体上进行替换,解决 【Logging system failed to initialize using configuration from ‘classpath:log4j2.xml’】-->
+      <!--springboot默认是用logback的日志框架的，所以需要排除logback，不然会出现jar依赖冲突的报错。-->
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -55,6 +63,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!--引入 log4j2-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
     </dependency>
 
     <!-- Mysql-Connector -->

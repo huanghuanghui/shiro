@@ -3,6 +3,7 @@ package com.hhh.shirospringboot.config.shiro.cache;
 import com.hhh.shirospringboot.model.common.Constant;
 import com.hhh.shirospringboot.util.JwtUtil;
 import com.hhh.shirospringboot.util.RedisHandle;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.cache.CacheException;
 import org.apache.shiro.cache.Cache;
 
@@ -16,6 +17,7 @@ import java.util.Set;
  * @date 2020/1/10 9:10
  * @Despriction 重写Shiro的Cache保存读取
  */
+@Log4j2
 public class CustomCache<K, V> implements Cache<K, V> {
 
   /**
@@ -30,18 +32,19 @@ public class CustomCache<K, V> implements Cache<K, V> {
    */
   @Override
   public Object get(Object key) throws CacheException {
-    return RedisHandle.get(this.getKey(key));
+    Object value =RedisHandle.get(this.getKey(key));
+    log.info("CustomCache-key:{}",key);
+    return value;
   }
 
   /**
    * 保存缓存
    */
   @Override
-  public Object put(Object key, Object value) throws CacheException {
-    // 读取配置文件，获取Redis的Shiro缓存过期时间
-    String shiroCacheExpireTime = Constant.SHIOR_CACHE_EXPIRE_TIME;
-    // 设置Redis的Shiro缓存
-    return RedisHandle.set(this.getKey(key), value, Integer.parseInt(shiroCacheExpireTime));
+  public Boolean put(Object key, Object value) throws CacheException {
+    log.info("CustomCache-存储缓存key:{}_value:{}",key,value);
+    // 设置Redis的Shiro缓存,与Redis的Shiro缓存过期时间
+    return RedisHandle.set(this.getKey(key), value, Constant.SHIOR_CACHE_EXPIRE_TIME);
   }
 
   /**
@@ -49,6 +52,7 @@ public class CustomCache<K, V> implements Cache<K, V> {
    */
   @Override
   public Object remove(Object key) throws CacheException {
+    log.info("CustomCache-移除缓存key:{}",key);
     RedisHandle.del(this.getKey(key));
     return null;
   }

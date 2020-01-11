@@ -46,3 +46,4 @@
 2. PageHelper插件 + 通用Mapper插件
 3. Shiro + Java-JWT无状态鉴权认证机制
 4. Redis(letture)缓存框架
+5. 引入Log4j2日志框架，替代spring默认logging日志框架，可以自己修改默认的配置文件log4j2-spring.xml中的文件输出路径

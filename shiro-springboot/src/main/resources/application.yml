@@ -55,6 +55,7 @@ mapper:
 
 #打印SQL
 logging:
+    config: classpath:log4j2-spring.xml
     level:
         # AccessToken过期时间-5分钟-5*60(秒为单位)
         com.hhh.shirospringboot.mapper: debug

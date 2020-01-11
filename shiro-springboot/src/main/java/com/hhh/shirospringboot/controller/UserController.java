@@ -16,6 +16,7 @@ import com.hhh.shirospringboot.util.JwtUtil;
 import com.hhh.shirospringboot.util.RedisHandle;
 import com.hhh.shirospringboot.util.UserUtil;
 import com.hhh.shirospringboot.util.common.StringUtil;
+import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -48,6 +49,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/user")
+@Log4j2
 public class UserController {
 
   private final UserUtil userUtil;
@@ -134,6 +136,7 @@ public class UserController {
       String token = JwtUtil.sign(userDtoTemp.getAccount(), currentTimeMillis);
       httpServletResponse.setHeader("Authorization", token);
       httpServletResponse.setHeader("Access-Control-Expose-Headers", "Authorization");
+      log.info("用户登录-{}登录成功，token-{}", userDto.getAccount(),token);
       return new ResponseBean(HttpStatus.OK.value(), "登录成功(Login Success.)"+"", token);
     } else {
       throw new CustomUnauthorizedException("帐号或密码错误(Account or Password Error.)");
