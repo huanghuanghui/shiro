@@ -19,9 +19,9 @@
 
 > 大部分是以**MD5 + 盐**的形式解决了这个问题(详细自己百度)，我采用**AES-128 + Base64**是以帐号+密码的形式进行加密密码，因为帐号具有唯一性，所以也不会出现相同结构的暗文密码这个问题
 
-##### 关于将Jedis工具类与SpringBoot整合
+##### 关于将lettuce与SpringBoot整合
 
-> 本来是直接将**JedisUtil**注入为**Bean**，每次使用直接`@Autowired`注入使用即可，但是在重写**Shiro**的**CustomCache**无法注入**JedisUtil**，所以就改成静态注入**JedisPool连接池**，**JedisUtil工具类**还是直接调用静态方法，无需`@Autowired`注入
+> 本来是直接将**lettuce的RedisTemplate**注入为**Bean**，直接静态注入RedisHandle类中，提供静态调用Redis操作方法
 
 ##### 关于Redis中保存RefreshToken信息(做到JWT的可控性)
 
