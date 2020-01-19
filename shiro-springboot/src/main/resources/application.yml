@@ -11,7 +11,7 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
         druid:
             filters: stat
-            maxActive: 20
+            maxActive: 100
             initialSize: 1
             maxWait: 60000
             minIdle: 1
@@ -23,6 +23,11 @@ spring:
             testOnReturn: false
             poolPreparedStatements: true
             maxOpenPreparedStatements: 20
+            #druid recycle
+            remove-abandoned: true
+            remove-abandoned-timeout-millis: 300
+            log-abandoned: true
+
     # 404交给异常处理器处理
     mvc:
         throw-exception-if-no-handler-found: true
@@ -31,7 +36,7 @@ spring:
         add-mappings: false
     redis:
       host: 122.112.204.214
-      database: 3
+      database: 12
       port: 6379
       password: jnsaa@redis.master
 
@@ -57,7 +62,6 @@ mapper:
 logging:
     config: classpath:log4j2-spring.xml
     level:
-        # AccessToken过期时间-5分钟-5*60(秒为单位)
         com.hhh.shirospringboot.mapper: debug
 
 

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.redisson.Redisson;
+import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,5 +61,19 @@ public class RedisConfig {
     config.setPort(port);
     config.setPassword(RedisPassword.of(password));
     return new LettuceConnectionFactory(config);
+  }
+
+  /**
+   * 创建Redisson Bean
+   * @return
+   */
+  @Bean
+  public Redisson redisson() {
+    Config config = new Config();
+    SingleServerConfig singleServerConfig = config.useSingleServer();
+    singleServerConfig.setAddress("redis://" + host + ":"+port);
+    singleServerConfig.setDatabase(database);
+    singleServerConfig.setPassword(password);
+    return (Redisson) Redisson.create(config);
   }
 }
